@@ -1,0 +1,47 @@
+<div class="bug" *ngIf="socketConnected">
+    <div class="logo">
+      <img src="assets/images/kinucks-logo.svg"/>
+    </div>
+    <div class="gameInfo">
+      <div class="teamsInfo">
+        <div class="guest teamBox" [ngStyle]="{'background-color': getColour('guest')}">
+          <div class="teamNamePlus">
+            <div class="team">{{this.guestTeam}}</div>
+            <div class="extraInfo"  *ngIf="guestExtra != ''">{{this.guestExtra}}</div>
+          </div>
+          <div class="score">
+            <span>{{this.guestScore}}</span>
+          </div>
+        </div>
+        <div class="shots">
+          <div class="label">SHOTS</div>
+          <div class="count">
+            <div class="guests">{{this.guestShots}}</div>
+            <div class="home">{{this.homeShots}}</div>
+          </div>
+          
+        </div>
+        <div class="home teamBox" [ngStyle]="{'background-color': getColour('home')}">
+          <div class="teamNamePlus">
+            <div class="team">{{this.homeTeam}}</div>
+            <div class="extraInfo" *ngIf="homeExtra != ''">{{this.homeExtra}}</div>
+          </div>
+          <div class="score">
+            <span>{{this.homeScore}}</span>
+          </div>
+        </div>
+      </div>
+      <div class="extraInfo">
+        
+      </div>
+    </div>
+    <div class="right">
+      <div class="periodInfo">
+        <div class="periodNum">{{this.period}}</div>
+        <div class="timeRemaining">{{timeLeft}}</div>
+      </div>
+    </div>
+    <div class="goalSlider slider" [class.slide-in-bottom]="goalSlideIn" [class.slide-out-bottom]="goalSlideOut">
+      <span class="content">{{messageStr}}</span>
+    </div>
+  </div>

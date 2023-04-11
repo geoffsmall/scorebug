@@ -1,0 +1,189 @@
+<form [formGroup]="adminForm" (ngSubmit)="onSubmit()">
+    <div class="adminPanel">
+        <div class="gameInfo">
+            <h2>Game Info</h2>
+            <div class="gameInfoInput">
+                <mat-form-field appearance="outline" class="period">
+                    <mat-label>Period</mat-label>
+                    <input matInput formControlName="period" maxlength="2">
+                    <mat-error>Numbers only</mat-error>
+                </mat-form-field>
+                <div class="time">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Time</mat-label>
+                        <input matInput formControlName="time" maxlength="5">
+                        <mat-error>Must in 00:00 format</mat-error>
+                    </mat-form-field>
+                    <button type="button" mat-icon-button aria-label="Stop Timer" (click)="startTimer()">
+                        <mat-icon>play_arrow</mat-icon>
+                    </button>
+                    <button type="button" mat-icon-button aria-label="Stop Timer" (click)="stopTimer()">
+                        <mat-icon>stop</mat-icon>
+                    </button>
+                </div>
+            </div>
+            
+        </div>
+        <div class="teamStats">
+            <div class="guests">
+                <h2>Guests</h2>
+                <mat-form-field appearance="outline">
+                    <mat-label>Name</mat-label>
+                    <input matInput formControlName="guestTeam">
+                    <mat-error>Uppercase and Numbers only</mat-error>
+                    <!-- <mat-hint>Only Uppercase and numbers</mat-hint> -->
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                    <mat-label>Colour</mat-label>
+                    <mat-select formControlName="guestColour">
+                        <mat-option *ngFor="let colour of colours" value="{{colour.hex}}"><span class="colorSwatch" [ngStyle]="{'color':colour.hex}">●</span> {{colour.name}}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+
+                <div class="btnRow">
+                    <button type="button" mat-icon-button aria-label="Stop Timer" (click)="updateScore('remove', 'guest')">
+                        <mat-icon>remove</mat-icon>
+                    </button>
+                    <mat-form-field appearance="outline">
+                        <mat-label>Score</mat-label>
+                        <input matInput formControlName="guestScore" type="number">
+                        <!-- <mat-hint>Only Uppercase and numbers</mat-hint> -->
+                        <mat-error>Numbers only</mat-error>
+                    </mat-form-field>
+                    <button type="button" mat-icon-button aria-label="Stop Timer" (click)="updateScore('add', 'guest')">
+                        <mat-icon>add</mat-icon>
+                    </button>
+                </div>
+                <div class="btnRow">
+                    <button type="button" mat-icon-button aria-label="Stop Timer" (click)="updateShots('remove', 'guest')">
+                        <mat-icon>remove</mat-icon>
+                    </button>
+                    <mat-form-field appearance="outline">
+                        <mat-label>Shots</mat-label>
+                        <input matInput formControlName="guestShots" type="number">
+                        <mat-error>Numbers only</mat-error>
+                        <!-- <mat-hint>Only Uppercase and numbers</mat-hint> -->
+                    </mat-form-field>
+                    <button type="button" mat-icon-button aria-label="Stop Timer" (click)="updateShots('add', 'guest')">
+                        <mat-icon>add</mat-icon>
+                    </button>
+                </div>
+                
+                <mat-form-field appearance="outline">
+                    <mat-label>Extra Info</mat-label>
+                    <mat-select formControlName="guestExtra">
+                        <mat-option value="">None</mat-option>
+                        <mat-option value="Power Play">Power Play</mat-option>
+                        <mat-option value="2 Man Advantage">2 Man Advantage</mat-option>
+                        <mat-option value="Empty Net">Empty Net</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div class="home">
+                <h2>Home</h2>
+                <mat-form-field appearance="outline">
+                    <mat-label>Name</mat-label>
+                    <input matInput formControlName="homeTeam">
+                    <!-- <mat-hint>Only Uppercase and numbers</mat-hint> -->
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                    <mat-label>Colour</mat-label>
+                    <mat-select formControlName="homeColour">
+                        <mat-option *ngFor="let colour of colours" value="{{colour.hex}}"><span class="colorSwatch" [ngStyle]="{'color':colour.hex}">●</span> {{colour.name}}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <div class="btnRow">
+                    <button type="button" mat-icon-button aria-label="Stop Timer" (click)="updateScore('remove', 'home')">
+                        <mat-icon>remove</mat-icon>
+                    </button>
+                    <mat-form-field appearance="outline">
+                        <mat-label>Score</mat-label>
+                        <input matInput formControlName="homeScore" type="number">
+                        <mat-error>Numbers only</mat-error>
+                        <!-- <mat-hint>Only Uppercase and numbers</mat-hint> -->
+                    </mat-form-field>
+                    <button type="button" mat-icon-button aria-label="Stop Timer" (click)="updateScore('add', 'home')">
+                        <mat-icon>add</mat-icon>
+                    </button>
+                </div>
+                <div class="btnRow">
+                    <button type="button" mat-icon-button aria-label="Stop Timer" (click)="updateShots('remove', 'home')">
+                        <mat-icon>remove</mat-icon>
+                    </button>
+                    <mat-form-field appearance="outline">
+                        <mat-label>Shots</mat-label>
+                        <input matInput formControlName="homeShots" type="number">
+                        <mat-error>Numbers only</mat-error>
+                        <!-- <mat-hint>Only Uppercase and numbers</mat-hint> -->
+                    </mat-form-field>
+                    <button type="button" mat-icon-button aria-label="Stop Timer" (click)="updateShots('add', 'home')">
+                        <mat-icon>add</mat-icon>
+                    </button>
+                </div>
+                
+                <mat-form-field appearance="outline">
+                    <mat-label>Extra Info</mat-label>
+                    <mat-select formControlName="homeExtra">
+                        <mat-option value="">None</mat-option>
+                        <mat-option value="Power Play">Power Play</mat-option>
+                        <mat-option value="2 Man Advantage">2 Man Advantage</mat-option>
+                        <mat-option value="Empty Net">Empty Net</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+        </div>
+        <div>
+            <button mat-raised-button type="submit" [disabled]="!adminForm.valid">Send Update</button>
+        </div>
+    </div>
+
+    <div>
+        <mat-divider></mat-divider>
+        <h4>Preset Message</h4>
+        <mat-form-field appearance="outline">
+            <mat-label>Message</mat-label>
+            <mat-select formControlName="presetMessage">
+                <mat-option value="">None</mat-option>
+                <mat-option value="Kinucks Warmup Time">Kinucks Warmup Time</mat-option>
+                <mat-option value="Let's Go Boys!">Let's Go Boys!</mat-option>
+                <mat-option value="They're buzzing!">They're buzzing!</mat-option>
+                <mat-option value="Go Kinucks Go!">Go Kinucks Go</mat-option>
+                <mat-option value="Blinky Wants a Goal!">Blinky Wants a Goal</mat-option>
+                <mat-option value="Bless my bagpipes!">Bless my bagpipes!</mat-option>
+                <mat-option value="Ric Flair Woooooo!">Ric Flair Woooooo!</mat-option>
+            </mat-select>
+        </mat-form-field>
+        <button type="button" mat-icon-button aria-label="Send Message" (click)="sendMessage('preset')">
+            <mat-icon>send</mat-icon>
+        </button>
+    </div>
+
+    <div>
+        <mat-divider></mat-divider>
+        <h4>Custom Message</h4>
+        <mat-form-field appearance="outline">
+            <mat-label>Message</mat-label>
+            <input matInput formControlName="message">
+            <!-- <mat-hint>Only Uppercase and numbers</mat-hint> -->
+        </mat-form-field>
+        <button type="button" mat-icon-button aria-label="Send Message" (click)="sendMessage('custom')">
+            <mat-icon>send</mat-icon>
+        </button>
+    </div>
+
+    <div>
+        <mat-divider></mat-divider>
+        <h4>Goal</h4>
+        <mat-form-field appearance="outline">
+            <mat-label>Player</mat-label>
+            <mat-select formControlName="goalScorer">
+                <mat-option *ngFor="let player of players" value="{{player}}">{{player}}</mat-option>
+            </mat-select>
+            <!-- <mat-hint>Only Uppercase and numbers</mat-hint> -->
+        </mat-form-field>
+        <button type="button" mat-icon-button aria-label="Display Goal Scorer" (click)="displayGoalScorer()">
+            <mat-icon>send</mat-icon>
+        </button>
+    </div>
+</form>
+

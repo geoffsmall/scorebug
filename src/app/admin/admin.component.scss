@@ -1,0 +1,64 @@
+.adminPanel{
+    margin: 10px;
+
+    .gameInfoInput{
+        display:flex;
+        flex-direction: row;
+        .period{
+            width:25%;
+            margin-right:10px;
+        }
+
+        .time{
+            width: 50%;
+
+            mat-form-field{
+                width:50%;
+            }
+        }
+    }
+}
+.teamStats{
+    display: flex;
+    flex-direction: row;
+    
+
+    .home, .guests{
+        width: calc(50% - 10px);
+
+        mat-form-field{
+            width: 100%;
+        }
+    }
+
+    .guests{
+        margin-right: 5px;
+        padding-right: 10px;
+        border-right: 1px solid rgb(216, 216, 216);
+    }
+
+    .home{
+        margin-left: 5px;
+    }
+
+    .btnRow{
+        display: flex;
+        flex-direction: row;
+    
+        mat-form-field{
+            width:75px;
+        }
+    }
+}
+
+
+
+.colorSwatch{
+    width: 20px;
+    height: 20px;
+}
+
+input[type=number]::-webkit-outer-spin-button, 
+input[type=number]::-webkit-inner-spin-button {
+    opacity: 1;
+}

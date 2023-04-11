@@ -1,1 +1,330 @@
 /* You can add global styles to this file, and also import other style files */
+body{
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    margin: 0;
+    padding: 0;
+    //overflow: hidden;
+}
+.bug{
+    display: flex;
+    height: calc(100vh - 4px);
+    flex-direction: row;
+    background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0), rgba(194, 194, 194, 0.7));
+    background-color: white;
+    border: 2px solid white;
+    .logo{
+        flex-grow: 1;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        
+        overflow: hidden;
+        background-image: url("assets/images/dynamic-background.jpg");
+
+        img{
+            margin: 10px;
+            max-width: 100%;
+            max-height: 100%;  
+        }
+        border-right: 2px solid white;
+    }
+
+    .gameInfo{
+        display: flex;
+        flex-grow: 4;
+        flex-direction: column;
+
+        .teamsInfo{
+            display: flex;
+            flex-direction: row;
+            flex-grow:2;
+        }
+        .shots{
+            display: flex;
+            flex-direction: column;
+            flex-grow:1;
+
+            text-align: center;
+            text-shadow: 1px 1px rgba(196, 196, 196, 0.8);
+
+            .label{
+                display: flex;
+                width: calc(100% - 10px);
+                height: 50%;
+                align-items: center;
+                justify-content: center;
+                font-size: 18px;
+                line-height: 18px;
+                border-bottom: 1px solid grey;
+                margin: 0 5px 0 5px;
+            }
+
+            .count{
+                display: flex;
+                
+                flex-direction: row;
+                width: 100%;
+                height: 50%;
+                //font-size: 36px;
+                .guests{
+                    border-right: 1px solid grey;
+                }
+                .home, .guests{
+                    display: flex;
+                    width: 50%;
+
+                    align-items: center;
+                    justify-content: center;
+                }
+            }
+
+            
+            
+        }
+
+        // .extraInfo{
+        //     display: flex;
+        //     flex-direction: row;
+
+        //     align-items: center;
+        //     justify-content: center;
+            
+        //     text-align: center;
+        //     flex-grow: 1;
+        // }
+    }
+
+    .teamBox{
+        display: flex;
+        flex-grow: 2;
+        flex-direction: row;
+        text-align: center;
+        color: white;
+
+        align-items: center;
+        justify-content: center;
+
+        &.home{
+            background-image: linear-gradient(to top, rgba(255, 255, 255, 0), rgba(0, 0, 0, 0.5));
+            background-color: #F68428;
+        }
+
+        &.guest{
+            background-image: linear-gradient(to top, rgba(255, 255, 255, 0), rgba(0, 0, 0, 0.5));
+            //background-color: green;
+        }
+        .teamNamePlus{
+            display: flex;
+            width: 75%;
+            //flex-grow: 2;
+
+            flex-direction: column;
+            height: 100%;
+
+            
+            .team{
+                display: flex;
+                height: 75%;
+
+                //flex-grow: 2;
+                font-size: 42px;
+                line-height: 42px;
+                
+                align-items: center;
+                justify-content: center;
+
+                text-shadow: 1px 1px rgb(0, 0, 0, 0.8);
+            }
+            .extraInfo{
+                height: 25%;
+                display: flex;
+
+                //flex-grow: 1;
+                font-size: 12px;
+                line-height: 12px;
+
+                align-items: center;
+                justify-content: center;
+
+                white-space: nowrap;
+                text-shadow: 1px 1px rgb(0, 0, 0, 0.8);
+
+                background: rgb(0, 0, 0, 0.3);
+            }
+        }
+
+        
+        .score{
+            display: flex;
+            height: 100%;
+            width: 25%;
+            
+            font-size: 42px;
+            line-height: 42px;
+
+            align-items: center;
+            justify-content: center;
+
+            background: rgb(0, 0, 0, 0.6);
+            span{
+                text-shadow: 1px 1px rgb(0, 0, 0, 0.8);
+            }
+        }
+    }
+    .right{
+        // display: flex;
+        // flex-grow: 1;
+        
+        .periodInfo{
+            display: flex;
+            flex-direction: column;
+            text-align: center;
+            height: 100%;
+
+            text-shadow: 1px 1px rgba(196, 196, 196, 0.8);
+    
+            // display: inline;
+            // flex-grow: 1;
+            // text-align: center;
+            // vertical-align: middle;    
+            .timeRemaining{
+                display: flex;
+
+                //margin: 10px;
+                height: 50%;
+                margin: 0 5px 0 5px;
+
+                align-items: center;
+                justify-content: center;
+
+                // background: -webkit-linear-gradient(grey, black);
+                // -webkit-background-clip: text;
+                // -webkit-text-fill-color: transparent;
+            }
+            .periodNum{
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                height: 50%;
+                margin: 0 5px 0 5px;
+                border-bottom: 1px solid grey;
+
+                //margin: 10px;
+            }
+        }
+    }
+}
+
+// @media(min-width: 300px){
+//     .teamBox{
+//         font-size: 36px;
+//         .score{
+//             font-size: 48px;
+//         }
+//     }
+//     .extraInfo{
+//         font-size: 20px;
+//     }
+//     .periodInfo{
+//         font-size: 24px;
+//     }
+// }
+
+// @media(min-width: 600px){
+//     .teamBox{
+//         font-size: 72px;
+//         .score{
+//             font-size: 90px;
+//         }
+//     }
+//     .extraInfo{
+//         font-size: 20px;
+//     }
+//     .periodInfo{
+//         font-size: 36px;
+//     }
+// }
+
+@media(min-width: 1024px ){
+    .bug{
+        .logo{
+            display: flex;
+        }
+
+        .gameInfo{
+            .shots{
+                .label{
+                    font-size: 24px;
+                    line-height: 24px;
+                }
+                .count{
+                    font-size: 24px;
+                    line-height: 24px;
+                }
+            }
+        }
+
+        .right{
+            // display: flex;
+            // flex-grow: 1;
+            
+            .periodInfo{
+                flex-direction: row;
+
+                .timeRemaining{
+                    height: calc(100% - 10px);
+                    margin: 5px 0 5px 0;
+                    font-size: 24px;
+                }
+                .periodNum{
+                    height: calc(100% - 10px);
+                    margin: 5px 10px 5px 10px;
+                    padding-right: 10px;
+                    border-bottom: none;
+                    border-right: 1px solid grey;
+                    font-size: 24px;
+                }
+            }
+        }
+    }
+}
+/*
+@media(min-width: 1024px){
+    .bug{
+        .logo{
+            display: flex !important;
+        }
+
+        .gameInfo{
+
+            .teamBox{
+                font-size: 72px;
+            }
+            .extraInfo{
+                font-size: 36px;
+            }
+
+            .shots{
+                .label{
+                    font-size: 48px;
+                }
+        
+                .count{
+                    font-size: 72px;
+                }   
+            }
+        }
+
+        .periodInfo{
+            font-size: 48px;
+        }
+    }
+    
+    
+    
+
+    
+}*/
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
