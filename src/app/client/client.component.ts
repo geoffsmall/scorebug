@@ -196,6 +196,7 @@ export class ClientComponent implements OnInit {
   }
 
   getColour(type:string){
+    console.log(this.guestColour, this.homeColour);
     if(type == 'guest'){      
       return this.guestColour;
     }else{

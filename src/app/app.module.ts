@@ -1,6 +1,7 @@
-import { NgModule } from '@angular/core';
+import { NgModule, enableProdMode } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { ReactiveFormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -9,11 +10,19 @@ import { AdminComponent } from './admin/admin.component';
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MaterialModule } from './material/material.module';
+import { MatchupComponent } from './matchup/matchup.component';
+import { LineupComponent } from './lineup/lineup.component';
+import { ScoreComponent } from './score/score.component';
+import { FinalComponent } from './final/final.component';
 @NgModule({
   declarations: [
     AppComponent,
     ClientComponent,
-    AdminComponent
+    AdminComponent,
+    MatchupComponent,
+    LineupComponent,
+    ScoreComponent,
+    FinalComponent
   ],
   imports: [
     BrowserModule,
@@ -21,6 +30,7 @@ import { MaterialModule } from './material/material.module';
     ReactiveFormsModule,
     MaterialModule,
     BrowserAnimationsModule,
+    HttpClientModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

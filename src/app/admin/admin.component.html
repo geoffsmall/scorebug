@@ -2,6 +2,12 @@
     <div class="adminPanel">
         <div class="gameInfo">
             <h2>Game Info</h2>
+            <div class="gameTitle">
+                <mat-form-field appearance="outline" class="">
+                    <mat-label>Game Title</mat-label>
+                    <input matInput formControlName="gameTitle">
+                </mat-form-field>
+            </div>
             <div class="gameInfoInput">
                 <mat-form-field appearance="outline" class="period">
                     <mat-label>Period</mat-label>
@@ -27,18 +33,38 @@
         <div class="teamStats">
             <div class="guests">
                 <h2>Guests</h2>
-                <mat-form-field appearance="outline">
-                    <mat-label>Name</mat-label>
-                    <input matInput formControlName="guestTeam">
-                    <mat-error>Uppercase and Numbers only</mat-error>
-                    <!-- <mat-hint>Only Uppercase and numbers</mat-hint> -->
-                </mat-form-field>
-                <mat-form-field appearance="outline">
-                    <mat-label>Colour</mat-label>
-                    <mat-select formControlName="guestColour">
-                        <mat-option *ngFor="let colour of colours" value="{{colour.hex}}"><span class="colorSwatch" [ngStyle]="{'color':colour.hex}">●</span> {{colour.name}}</mat-option>
-                    </mat-select>
-                </mat-form-field>
+                <div>
+                    <mat-form-field appearance="outline">
+                        <mat-label>Team</mat-label>
+                        <mat-select formControlName="guestTeam" (selectionChange)="toggleCustomTeam('guest', $event)">
+                            <mat-option *ngFor="let team of teams" value="{{team.teamname}}">{{team.city}} {{team.teamname}}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>                
+                <fieldset class="customTeamInfo" *ngIf="guestCustom">
+                    <legend>Custom Team Info</legend>
+                    <mat-form-field appearance="outline">
+                        <mat-label>Custom Team City</mat-label>
+                        <input matInput formControlName="guestTeamCityCustom">
+                        <!-- <mat-hint>Only Uppercase and numbers</mat-hint> -->
+                    </mat-form-field>
+                    <mat-form-field appearance="outline">
+                        <mat-label>Custom Team Name</mat-label>
+                        <input matInput formControlName="guestTeamNameCustom">
+                        <!-- <mat-hint>Only Uppercase and numbers</mat-hint> -->
+                    </mat-form-field>
+                    <mat-form-field appearance="outline">
+                        <mat-label>Custom Team Abbreviation</mat-label>
+                        <input matInput formControlName="guestTeamAbvCustom">
+                        <!-- <mat-hint>Only Uppercase and numbers</mat-hint> -->
+                    </mat-form-field>
+                    <mat-form-field appearance="outline">
+                        <mat-label>Custom Colour</mat-label>
+                        <mat-select formControlName="guestColour">
+                            <mat-option *ngFor="let colour of colours" value="{{colour.hex}}"><span class="colorSwatch" [ngStyle]="{'color':colour.hex}">●</span> {{colour.name}}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </fieldset>
 
                 <div class="btnRow">
                     <button type="button" mat-icon-button aria-label="Stop Timer" (click)="updateScore('remove', 'guest')">
@@ -81,17 +107,40 @@
             </div>
             <div class="home">
                 <h2>Home</h2>
-                <mat-form-field appearance="outline">
-                    <mat-label>Name</mat-label>
-                    <input matInput formControlName="homeTeam">
-                    <!-- <mat-hint>Only Uppercase and numbers</mat-hint> -->
-                </mat-form-field>
-                <mat-form-field appearance="outline">
-                    <mat-label>Colour</mat-label>
-                    <mat-select formControlName="homeColour">
-                        <mat-option *ngFor="let colour of colours" value="{{colour.hex}}"><span class="colorSwatch" [ngStyle]="{'color':colour.hex}">●</span> {{colour.name}}</mat-option>
-                    </mat-select>
-                </mat-form-field>
+                <div>
+                    <mat-form-field appearance="outline">
+                        <mat-label>Team</mat-label>
+                        <mat-select formControlName="homeTeam" (selectionChange)="toggleCustomTeam('home', $event)">
+                            <mat-option *ngFor="let team of teams" value="{{team.teamname}}">{{team.city}} {{team.teamname}}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                
+                <fieldset class="customTeamInfo" *ngIf="homeCustom">
+                    <legend>Custom Team Info</legend>
+                    <mat-form-field appearance="outline">
+                        <mat-label>Custom Team City</mat-label>
+                        <input matInput formControlName="homeTeamCityCustom">
+                        <!-- <mat-hint>Only Uppercase and numbers</mat-hint> -->
+                    </mat-form-field>
+                    <mat-form-field appearance="outline">
+                        <mat-label>Custom Team Name</mat-label>
+                        <input matInput formControlName="homeTeamNameCustom">
+                        <!-- <mat-hint>Only Uppercase and numbers</mat-hint> -->
+                    </mat-form-field>
+                    <mat-form-field appearance="outline">
+                        <mat-label>Custom Team Abbreviation</mat-label>
+                        <input matInput formControlName="homeTeamAbvCustom">
+                        <!-- <mat-hint>Only Uppercase and numbers</mat-hint> -->
+                    </mat-form-field>
+                    <mat-form-field appearance="outline">
+                        <mat-label>Custom Colour</mat-label>
+                        <mat-select formControlName="homeColour">
+                            <mat-option *ngFor="let colour of colours" value="{{colour.hex}}"><span class="colorSwatch" [ngStyle]="{'color':colour.hex}">●</span> {{colour.name}}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </fieldset>
+
                 <div class="btnRow">
                     <button type="button" mat-icon-button aria-label="Stop Timer" (click)="updateScore('remove', 'home')">
                         <mat-icon>remove</mat-icon>
@@ -146,7 +195,7 @@
                 <mat-option value="">None</mat-option>
                 <mat-option value="Kinucks Warmup Time">Kinucks Warmup Time</mat-option>
                 <mat-option value="Let's Go Boys!">Let's Go Boys!</mat-option>
-                <mat-option value="They're buzzing!">They're buzzing!</mat-option>
+                <mat-option value="They're buzzin!">They're buzzin!</mat-option>
                 <mat-option value="Go Kinucks Go!">Go Kinucks Go</mat-option>
                 <mat-option value="Blinky Wants a Goal!">Blinky Wants a Goal</mat-option>
                 <mat-option value="Bless my bagpipes!">Bless my bagpipes!</mat-option>
@@ -177,7 +226,7 @@
         <mat-form-field appearance="outline">
             <mat-label>Player</mat-label>
             <mat-select formControlName="goalScorer">
-                <mat-option *ngFor="let player of players" value="{{player}}">{{player}}</mat-option>
+                <mat-option *ngFor="let player of players" value="#{{player.number}} - {{player.fname}} {{player.lname}}">{{player.number}} - {{player.fname}} {{player.lname}}</mat-option>
             </mat-select>
             <!-- <mat-hint>Only Uppercase and numbers</mat-hint> -->
         </mat-form-field>

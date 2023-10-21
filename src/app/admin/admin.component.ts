@@ -2,9 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { FormBuilder } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { filter, Observable, Subscription, takeWhile, timer } from 'rxjs';
+import { filter, Observable, Subscription, take, takeWhile, timer } from 'rxjs';
 import { SocketService } from '../socket.service';
-
+import { GameDataService } from '../game-data.service';
+import { MatSelectChange } from '@angular/material/select';
+import {Player} from '../shared/models/player.interface';
+import {Team} from '../shared/models/team.interface';
 @Component({
   selector: 'app-admin',
   templateUrl: './admin.component.html',
@@ -13,21 +16,30 @@ import { SocketService } from '../socket.service';
 export class AdminComponent implements OnInit {
 
   adminForm = this.fb.group({
+    gameTitle:[''],
     period: ['1', Validators.compose([Validators.required, Validators.pattern("[0-9]{1}")])],
     time: ['00:00', Validators.compose([Validators.required,Validators.pattern("[0-9]{2}:[0-9]{2}")])], 
-    homeTeam: ['HME', Validators.compose([Validators.required, Validators.pattern("[A-Z0-9]{1,7}")])], //
+    homeTeam: ['HME', Validators.compose([Validators.required])], //
+    homeTeamCustom:[''],
     homeScore: ['0', Validators.compose([Validators.required,Validators.pattern("[0-9]{0,3}")])], 
     homeShots: ['0', Validators.compose([Validators.required,Validators.pattern("[0-9]{0,3}")])], 
     homeExtra: [''],
-    guestTeam: ['GST', Validators.compose([Validators.required,Validators.pattern("[A-Z0-9]{1,7}")])], //, Validators.pattern("[^\'\"\.]")
+    guestTeam: ['GST', Validators.compose([Validators.required])], //, Validators.pattern("[^\'\"\.]") // Validators.pattern("[A-Z0-9]{1,7}")
+    guestTeamCustom:[''],
     guestScore: ['0', Validators.compose([Validators.required,Validators.pattern("[0-9]{0,3}")])], 
     guestShots: ['0', Validators.compose([Validators.required,Validators.pattern("[0-9]{0,3}")])], 
     guestExtra: [''],
-    guestColour: ['', Validators.required],
-    homeColour: ['', Validators.required],
+    guestColour: [''],
+    homeColour: [''],
     message:[''],
     goalScorer:[''],
-    presetMessage:['']
+    presetMessage:[''],
+    guestTeamCityCustom:[''],
+    guestTeamNameCustom:[''],
+    guestTeamAbvCustom:[''],
+    homeTeamCityCustom:[''],
+    homeTeamNameCustom:[''],
+    homeTeamAbvCustom:[''],
   });
 
   colours = [
@@ -42,29 +54,22 @@ export class AdminComponent implements OnInit {
     {hex: "#008080", name: "Teal"},
   ];
 
-  players:string[] = [
-    "#2 Owen Coutts",
-    "#4 Lawson Cohoon",
-    "#5 Andrew Page",
-    "#6 Charlie Small",
-    "#7 Max Malhotra",
-    "#8 Nolan Knight",
-    "#9 Hayden Caravaggio",
-    "#10 Harrison Bray",
-    "#11 Borden Hubbard",
-    "#12 Charlie Storey",
-    "#14 Owen McKinlay",
-    "#15 Alex Mercer",
-    "#16 Mason Caravaggio",
-    "#17 Coby MacArthur",
-    "#18 Blake McCrae"
-  ];
+  players:any;
+  teams:any;
 
   timerSub:any;
 
   pauseTimer:boolean = true;
 
-  constructor(private fb: FormBuilder, private socketService: SocketService, private _snackBar: MatSnackBar) { }
+  public guestCustom:boolean = false;
+  public homeCustom:boolean = false;
+
+  constructor(
+    private fb: FormBuilder, 
+    private socketService: SocketService, 
+    private _snackBar: MatSnackBar,
+    private _gameDataService: GameDataService
+  ) { }
 
   ngOnInit(): void {
     this.socketService.clientSocketStatus$.subscribe((status)=>{
@@ -77,11 +82,12 @@ export class AdminComponent implements OnInit {
 
     this.socketService.adminGameStatsUpdate$.subscribe((gameData:any)=>{
 
-      console.log(gameData);
-
-      const {period='1', time='0', homeTeam="T1", homeScore=0, homeShots=0, homeExtra="", guestTeam="T2", guestScore=0, guestShots=0, guestExtra="", homeColour, guestColour} = gameData;
+      const {gameTitle='', period='1', time='0', homeTeam="T1", homeScore=0, homeShots=0, homeExtra="", guestTeam="T2", guestScore=0, guestShots=0, guestExtra="", homeColour, guestColour} = gameData;
       
+      console.log(homeTeam, guestTeam)
+
       this.adminForm.patchValue({
+        gameTitle,
         period: this.parsePeriod(period),
         time: this.convertTimeToString(time),
         homeTeam,
@@ -96,6 +102,28 @@ export class AdminComponent implements OnInit {
         guestColour
       });
     });
+
+    this._gameDataService.getTeams()
+      .pipe(
+        take(1),
+      )
+      .subscribe((teams) => {
+        this.teams = teams.sort((a,b)=>a.city.localeCompare(b.city));
+
+        this.teams.push({
+          teamname:"Custom",
+        })
+      });
+
+      this._gameDataService.getPlayers()
+      .pipe(
+        take(1),
+      )
+      .subscribe((players:Player[]) => {
+        this.players = players.sort((a, b) => a.number - b.number);;
+      });
+
+      this.adminForm.markAllAsTouched();
   }
 
   parsePeriod(period:string){
@@ -189,8 +217,6 @@ export class AdminComponent implements OnInit {
 
     let msg;
 
-    console.log(type);
-
     if(type === "preset"){
       msg = formControls.presetMessage.value;
     }else if(type === "custom"){
@@ -278,7 +304,8 @@ export class AdminComponent implements OnInit {
 
     let timeStr:string = `${formControls.time.value}`;
 
-    const updatedGameData = {
+    const updatedGameData:GameData = {
+      gameTitle: formControls.gameTitle.value || '',
       period: periodStr,
       time: this.parseTimeString(timeStr),
       homeTeam: formControls.homeTeam.value,
@@ -289,12 +316,76 @@ export class AdminComponent implements OnInit {
       guestScore: formControls.guestScore.value,
       guestShots: formControls.guestShots.value,
       guestExtra: formControls.guestExtra.value,
-      guestColour: formControls.guestColour.value,
-      homeColour: formControls.homeColour.value
+      guestTeamCityCustom:null,
+      guestTeamNameCustom:null,
+      guestTeamAbvCustom:null,
+      guestColour:null,
+      homeTeamCityCustom:null,
+      homeTeamNameCustom:null,
+      homeTeamAbvCustom:null,
+      homeColour:null
     };
+
+    if(this.guestCustom){
+      updatedGameData.guestTeamCityCustom = formControls.guestTeamCityCustom.value;
+      updatedGameData.guestTeamNameCustom = formControls.guestTeamNameCustom.value;
+      updatedGameData.guestTeamAbvCustom = formControls.guestTeamAbvCustom.value;
+      updatedGameData.guestColour = formControls.guestColour.value;
+    }else{
+      updatedGameData.guestColour = this._processTeamColor(formControls.guestTeam.value);
+    }
+
+    if(this.homeCustom){
+      updatedGameData.homeTeamCityCustom = formControls.homeTeamCityCustom.value;
+      updatedGameData.homeTeamNameCustom = formControls.homeTeamNameCustom.value;
+      updatedGameData.homeTeamAbvCustom = formControls.homeTeamAbvCustom.value;
+      updatedGameData.homeColour = formControls.homeColour.value;
+    }else{
+      updatedGameData.homeColour = this._processTeamColor(formControls.homeTeam.value);
+    }
 
     this.socketService.sendMessage("adminUpdate", updatedGameData);
     
   }
 
+  _processTeamColor(teamName:string|null){
+    let selTeam = this.teams.find((team:{[key:string]:any})=>team['teamname'] === teamName);
+    console.log(selTeam, teamName);
+    if(selTeam){
+      return selTeam.color;
+    }else{
+      return "#F0F0F0";
+    }
+  };
+
+  toggleCustomTeam(type:string, event:MatSelectChange){
+    if(type==="guest"){
+      this.guestCustom = event.value==="Custom";      
+    }else if(type==="home"){
+      this.homeCustom = event.value==="Custom";
+    }
+  }
+
+}
+
+interface GameData {
+  gameTitle:string,
+  period:string,
+  time:number,
+  homeTeam:string|null,
+  homeScore:string|null,
+  homeShots:string|null,
+  homeExtra:string|null,
+  guestTeam:string|null,
+  guestScore:string|null,
+  guestShots:string|null,
+  guestExtra:string|null,
+  guestColour?:string|null,
+  homeColour?:string|null,
+  guestTeamCityCustom?:string|null,
+  guestTeamNameCustom?:string|null,
+  guestTeamAbvCustom?:string|null,
+  homeTeamCityCustom?:string|null,
+  homeTeamNameCustom?:string|null,
+  homeTeamAbvCustom?:string|null,
 }

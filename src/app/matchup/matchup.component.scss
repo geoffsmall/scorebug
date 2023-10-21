@@ -1,0 +1,130 @@
+.matchupScr{
+    height: 100%;
+    background-color: orange;
+    background-image: url("../../assets/images/ice-background.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+
+    display:flex;
+    flex-direction: column;
+
+    color:white;
+    text-shadow: 2px 2px 4px #000000;
+
+    .header{
+        flex: 1 1 0px;
+
+        display:flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 20px;
+
+        h1{
+            font-size: 48px;
+            font-weight: bold;
+            line-height: 48px;
+        }
+
+        .spacer{
+            flex: 1 1 0px;
+        }
+        .sponsor-logo{
+            flex: 2 1 0px;
+
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+
+            img{
+                max-width: 400px;
+            }
+        }
+    }
+
+    .footer{
+        flex: 1 1 0px;
+
+        display:flex;
+        flex-direction: row;
+
+        .spacer{
+            flex: 1 1 0px;
+        }
+        .sponsor-logo{
+            flex: 2 1 0px;
+
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+
+            h3{
+                font-weight: bold;
+            }
+
+            img{
+                max-width: 300px;
+            }
+
+            padding-bottom: 40px;
+        }
+    }
+
+    .teams{
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        height: 100%;
+
+        flex: 3 1 0px;
+
+        .divider{
+            font-weight: bold;
+            font-size: 72px;
+        }
+
+        .team{
+            flex: 1 1 0px;
+            text-align: center;
+            height: 100%;
+
+            display: flex;
+            flex-direction: column;
+
+            align-content: center;
+
+            .logo{
+                display: flex;
+                flex-direction: row;
+                justify-content: center;
+
+                flex: 2 0 0px;
+
+                img{
+                    
+                }
+            }
+            .teaminfo{
+                flex: 1 1 0px;
+
+                h1{
+                    font-weight: bold;
+                    
+                    margin: 0;
+                }
+                h2{
+                    font-weight: bold;
+                    font-size: 48px;
+                    line-height: 48px;
+                    margin: 0;
+                }
+            }
+
+            
+
+        }
+    }
+}
