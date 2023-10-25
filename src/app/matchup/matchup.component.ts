@@ -16,8 +16,8 @@ export class MatchupComponent implements OnInit {
   private teams:Team[] = [];
   private socketConnected:boolean = false;
 
-  public selHomeTeam:Team = {teamname:''};
-  public selGuestTeam:Team = {teamname:''};
+  public selHomeTeam:Team = {teamname:'', city:''};
+  public selGuestTeam:Team = {teamname:'', city:''};
   public gameTitle:string = '';
 
   constructor(
@@ -51,6 +51,7 @@ export class MatchupComponent implements OnInit {
 
         this.teams.push({
           teamname: "Custom",
+          city:""
         })
       });
 
@@ -70,9 +71,9 @@ export class MatchupComponent implements OnInit {
 
     this.gameTitle = gameTitle;
 
-    this.selHomeTeam = this.teams.find((team:Team)=>team.teamname === homeTeam) || {teamname:''};
+    this.selHomeTeam = this.teams.find((team:Team)=>team.teamname === homeTeam) || {teamname:'', city:''};
 
-    this.selGuestTeam = this.teams.find((team:Team)=>team.teamname === guestTeam) || {teamname:''};
+    this.selGuestTeam = this.teams.find((team:Team)=>team.teamname === guestTeam) || {teamname:'', city:''};
 
     //console.log(selHomeTeam, selGuestTeam);
 

@@ -6,6 +6,7 @@ import { MatchupComponent } from './matchup/matchup.component';
 import { LineupComponent } from './lineup/lineup.component';
 import { ScoreComponent } from './score/score.component';
 import { FinalComponent } from './final/final.component';
+import { PlayerOfGameComponent } from './player-of-game/player-of-game.component';
 
 const routes: Routes = [
   {path: '', redirectTo: 'client', pathMatch: 'full'},
@@ -14,6 +15,7 @@ const routes: Routes = [
   { path: 'lineup', component: LineupComponent },
   { path: 'score', component: ScoreComponent },
   { path: 'final', component: FinalComponent },
+  { path: 'potg', component: PlayerOfGameComponent },
   { path: 'admin', component: AdminComponent }
 ];
 

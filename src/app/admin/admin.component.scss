@@ -11,6 +11,7 @@
     .gameInfoInput{
         display:flex;
         flex-direction: row;
+
         .period{
             width:25%;
             margin-right:10px;
@@ -19,8 +20,14 @@
         .time{
             width: 50%;
 
+            display:flex;
+            flex-direction: row;
+
+            align-items: center;
+            justify-content: left;
+
             mat-form-field{
-                width:50%;
+                width: 75px;
             }
         }
     }
@@ -55,6 +62,15 @@
         mat-form-field{
             width:75px;
         }
+    }
+}
+
+.onScreenOptions{
+    display: flex;
+    flex-direction: row;
+
+    div.options{
+        border: 1px solid red;
     }
 }
 

@@ -27,8 +27,8 @@ export class SocketService{
 
     this.adminGameStatsUpdate$.asObservable();
 
-    //this.socket = io('http://localhost:3006');
-    this.socket = io('http://jdcarwash.com');
+    this.socket = io('http://localhost:3006');
+    //this.socket = io('http://jdcarwash.com');
 
     this.socket.on("connect",()=>{
       console.log("Connected to Socket");

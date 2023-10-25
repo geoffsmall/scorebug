@@ -14,6 +14,7 @@ import { MatchupComponent } from './matchup/matchup.component';
 import { LineupComponent } from './lineup/lineup.component';
 import { ScoreComponent } from './score/score.component';
 import { FinalComponent } from './final/final.component';
+import { PlayerOfGameComponent } from './player-of-game/player-of-game.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -22,7 +23,8 @@ import { FinalComponent } from './final/final.component';
     MatchupComponent,
     LineupComponent,
     ScoreComponent,
-    FinalComponent
+    FinalComponent,
+    PlayerOfGameComponent
   ],
   imports: [
     BrowserModule,

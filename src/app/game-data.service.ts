@@ -1,18 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-
-interface Team{
-  teamname:string,
-  city: string,
-  logo:string
-};
-
-interface Player{
-  fname:string,
-  lname:string,
-  number:number
-}
+import { Player } from './shared/models/player.interface';
+import { Team } from './shared/models/team.interface';
 
 @Injectable({
   providedIn: 'root'

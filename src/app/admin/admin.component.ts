@@ -18,7 +18,8 @@ export class AdminComponent implements OnInit {
   adminForm = this.fb.group({
     gameTitle:[''],
     period: ['1', Validators.compose([Validators.required, Validators.pattern("[0-9]{1}")])],
-    time: ['00:00', Validators.compose([Validators.required,Validators.pattern("[0-9]{2}:[0-9]{2}")])], 
+    timeMin: ['00', Validators.compose([Validators.required,Validators.pattern("[0-9]{2}")])], 
+    timeSec: ['00', Validators.compose([Validators.required,Validators.pattern("[0-9]{2}")])], 
     homeTeam: ['HME', Validators.compose([Validators.required])], //
     homeTeamCustom:[''],
     homeScore: ['0', Validators.compose([Validators.required,Validators.pattern("[0-9]{0,3}")])], 
@@ -40,6 +41,25 @@ export class AdminComponent implements OnInit {
     homeTeamCityCustom:[''],
     homeTeamNameCustom:[''],
     homeTeamAbvCustom:[''],
+    // Lineup
+    fline1player1:[''],
+    fline1player2:[''],
+    fline1player3:[''],
+    fline2player1:[''],
+    fline2player2:[''],
+    fline2player3:[''],
+    fline3player1:[''],
+    fline3player2:[''],
+    fline3player3:[''],
+    dline1player1:[''],
+    dline1player2:[''],
+    dline2player1:[''],
+    dline2player2:[''],
+    dline3player1:[''],
+    dline3player2:[''],
+    // Player of the Game
+    potgGameInfo:[''],
+    potgPlayer:[''],
   });
 
   colours = [
@@ -62,7 +82,10 @@ export class AdminComponent implements OnInit {
   pauseTimer:boolean = true;
 
   public guestCustom:boolean = false;
+  public guestTeamSel:string = "";
+
   public homeCustom:boolean = false;
+  public homeTeamSel:string = "";
 
   constructor(
     private fb: FormBuilder, 
@@ -75,21 +98,39 @@ export class AdminComponent implements OnInit {
     this.socketService.clientSocketStatus$.subscribe((status)=>{
       
       if(status==="connected"){
-        console.log(status, status==="connected");
         this.socketService.sendMessage("adminJoin", "admin");
       }
     });
 
     this.socketService.adminGameStatsUpdate$.subscribe((gameData:any)=>{
 
-      const {gameTitle='', period='1', time='0', homeTeam="T1", homeScore=0, homeShots=0, homeExtra="", guestTeam="T2", guestScore=0, guestShots=0, guestExtra="", homeColour, guestColour} = gameData;
-      
-      console.log(homeTeam, guestTeam)
+      console.log(gameData);
 
+      const {gameTitle='', period='1', time='0', homeTeam="T1", homeScore=0, homeShots=0, homeExtra="", guestTeam="T2", guestScore=0, guestShots=0, guestExtra="", homeColour, guestColour,guestTeamCityCustom, guestTeamNameCustom, guestTeamAbvCustom, homeTeamCityCustom, homeTeamNameCustom, homeTeamAbvCustom,// Lineup
+      fline1player1,
+      fline1player2,
+      fline1player3,
+      fline2player1,
+      fline2player2,
+      fline2player3,
+      fline3player1,
+      fline3player2,
+      fline3player3,
+      dline1player1,
+      dline1player2,
+      dline2player1,
+      dline2player2,
+      dline3player1,
+      dline3player2,
+      // Player of the Game
+      potgGameInfo,
+      potgPlayer} = gameData;
+      
       this.adminForm.patchValue({
         gameTitle,
         period: this.parsePeriod(period),
-        time: this.convertTimeToString(time),
+        timeMin: this.convertTimeToString(time,"min"),
+        timeSec: this.convertTimeToString(time,"sec"),
         homeTeam,
         homeScore,
         homeShots,
@@ -99,8 +140,35 @@ export class AdminComponent implements OnInit {
         guestScore,
         guestShots,
         guestExtra,
-        guestColour
+        guestColour,
+        guestTeamCityCustom,
+        guestTeamNameCustom,
+        guestTeamAbvCustom,
+        homeTeamCityCustom,
+        homeTeamNameCustom,
+        homeTeamAbvCustom,
+        // Lineup
+        fline1player1,
+        fline1player2,
+        fline1player3,
+        fline2player1,
+        fline2player2,
+        fline2player3,
+        fline3player1,
+        fline3player2,
+        fline3player3,
+        dline1player1,
+        dline1player2,
+        dline2player1,
+        dline2player2,
+        dline3player1,
+        dline3player2,
+        // Player of the Game
+        potgGameInfo,
+        potgPlayer,
       });
+
+      this._processTeamNameSelections();
     });
 
     this._gameDataService.getTeams()
@@ -136,7 +204,7 @@ export class AdminComponent implements OnInit {
     }
   }
 
-  private convertTimeToString(time:number){
+  private convertTimeToString(time:number, timeType:string){
     const minutes = Math.floor(time / 60);
     const seconds = time - minutes * 60;
 
@@ -144,14 +212,16 @@ export class AdminComponent implements OnInit {
 
     let secondsStr = ('0' + seconds).slice(-2); // add extra 0 if needed
 
-    return `${minutesStr}:${secondsStr}`;
+    if(timeType == "min"){
+      return `${minutesStr}`;
+    }else{
+      return `${secondsStr}`;
+    }
   }
 
-  private parseTimeString(timeString:string="00:00"){
-    let timeStrings = timeString.split(":");
-
-    let minutes = parseInt(timeStrings[0]);
-    let seconds = parseInt(timeStrings[1]);
+  private parseTimeString(timeMin:string="00", timeSec:string="00"){
+    let minutes = parseInt(timeMin);
+    let seconds = parseInt(timeSec);
 
     let totalSeconds = (minutes * 60) + seconds;
 
@@ -160,7 +230,7 @@ export class AdminComponent implements OnInit {
 
   stopTimer(){
     const formControls = this.adminForm.controls;
-    let timeStr:string = formControls.time.value || "00:00";
+    let timeStr:string = `${formControls.timeMin.value}:${formControls.timeSec.value}` || "00:00";
     let totalSeconds = this.parseTimeString(timeStr);
     
     this.pauseTimer = true;
@@ -176,17 +246,20 @@ export class AdminComponent implements OnInit {
     }
 
     const formControls = this.adminForm.controls;
-    let timeStr:string = formControls.time.value || "00:00";
+    let timeStr:string = `${formControls.timeMin.value}:${formControls.timeSec.value}` || "00:00";
 
     if(timeStr.startsWith("-")){
-      timeStr = "00:00";
-      this.adminForm.patchValue({time:timeStr});
+      this.adminForm.patchValue({timeMin:"00"});
+      this.adminForm.patchValue({timeSec:"00"});
 
       this._snackBar.open("Time is 00:00, please reset time.");
       return;
     }
 
-    let totalSeconds = this.parseTimeString(timeStr);
+    let timeMin = formControls.timeMin.value || "00";
+    let timeSec = formControls.timeSec.value || "00";
+
+    let totalSeconds = this.parseTimeString(timeMin, timeSec);
 
     this.pauseTimer = false;
     this.updateTimerInput(totalSeconds);
@@ -205,9 +278,10 @@ export class AdminComponent implements OnInit {
     .subscribe((value) =>{
       let secondsLeft = totalSeconds - value;
       const minutesLeft = Math.floor(secondsLeft / 60);
-      let timeLeft = ('00' + minutesLeft).slice(-2) + ':' + ('00' + Math.floor(secondsLeft - minutesLeft * 60)).slice(-2);
+      let timeMinLeft = ('00' + minutesLeft).slice(-2);
+      let timeSecLeft = ('00' + Math.floor(secondsLeft - minutesLeft * 60)).slice(-2);
 
-      this.adminForm.patchValue({time:timeLeft})
+      this.adminForm.patchValue({timeMin:timeMinLeft, timeSec:timeSecLeft});
     });
   }
   
@@ -283,6 +357,10 @@ export class AdminComponent implements OnInit {
     this.socketService.sendMessage("adminShotsUpdate", {[field]:updatedShots});
   }
 
+  updatePeriod(type:string){
+    console.log(type);
+  }
+
   onSubmit():void{
 
     if(this.adminForm.status === "INVALID"){
@@ -302,7 +380,7 @@ export class AdminComponent implements OnInit {
       break;
     }
 
-    let timeStr:string = `${formControls.time.value}`;
+    let timeStr:string = `${formControls.timeMin.value}:${formControls.timeSec.value}`;
 
     const updatedGameData:GameData = {
       gameTitle: formControls.gameTitle.value || '',
@@ -323,7 +401,25 @@ export class AdminComponent implements OnInit {
       homeTeamCityCustom:null,
       homeTeamNameCustom:null,
       homeTeamAbvCustom:null,
-      homeColour:null
+      homeColour:null,
+      fline1player1:formControls.fline1player1.value,
+      fline1player2:formControls.fline1player2.value,
+      fline1player3:formControls.fline1player3.value,
+      fline2player1:formControls.fline2player1.value,
+      fline2player2:formControls.fline2player2.value,
+      fline2player3:formControls.fline2player3.value,
+      fline3player1:formControls.fline3player1.value,
+      fline3player2:formControls.fline3player2.value,
+      fline3player3:formControls.fline3player3.value,
+      dline1player1:formControls.dline1player1.value,
+      dline1player2:formControls.dline1player2.value,
+      dline2player1:formControls.dline2player1.value,
+      dline2player2:formControls.dline2player2.value,
+      dline3player1:formControls.dline3player1.value,
+      dline3player2:formControls.dline3player2.value,
+      // Player of the Game
+      potgGameInfo:formControls.potgGameInfo.value,
+      potgPlayer:formControls.potgPlayer.value
     };
 
     if(this.guestCustom){
@@ -364,6 +460,26 @@ export class AdminComponent implements OnInit {
     }else if(type==="home"){
       this.homeCustom = event.value==="Custom";
     }
+
+    this._processTeamNameSelections();
+  }
+
+  _processTeamNameSelections(){
+    const formControls = this.adminForm.controls;
+
+    let homeTeam:string = formControls.homeTeam.value || "N/A";
+    let guestTeam:string = formControls.guestTeam.value || "N/A";
+
+    if(homeTeam === "Custom"){
+      homeTeam = formControls.homeTeamNameCustom.value || "N/A";
+    }
+
+    if(guestTeam === "Custom"){
+      guestTeam = formControls.guestTeamNameCustom.value || "N/A";
+    }
+
+    this.homeTeamSel = homeTeam;
+    this.guestTeamSel = guestTeam;
   }
 
 }
@@ -388,4 +504,22 @@ interface GameData {
   homeTeamCityCustom?:string|null,
   homeTeamNameCustom?:string|null,
   homeTeamAbvCustom?:string|null,
+  fline1player1:string|null,
+  fline1player2:string|null,
+  fline1player3:string|null,
+  fline2player1:string|null,
+  fline2player2:string|null,
+  fline2player3:string|null,
+  fline3player1:string|null,
+  fline3player2:string|null,
+  fline3player3:string|null,
+  dline1player1:string|null,
+  dline1player2:string|null,
+  dline2player1:string|null,
+  dline2player2:string|null,
+  dline3player1:string|null,
+  dline3player2:string|null,
+  // Player of the Game
+  potgGameInfo:string|null,
+  potgPlayer:string|null,
 }
