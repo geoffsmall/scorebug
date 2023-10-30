@@ -108,13 +108,13 @@
                         <div class="time">
                             <mat-form-field appearance="outline">
                                 <mat-label>Minutes</mat-label>
-                                <input matInput formControlName="timeMin" type="number" maxlength="2">
+                                <input matInput formControlName="timeMin" maxlength="2" type="number">
                                 <mat-error>Must in 00 format</mat-error>
                             </mat-form-field>
                             <span>:</span>
                             <mat-form-field appearance="outline">
                                 <mat-label>Seconds</mat-label>
-                                <input matInput formControlName="timeSec" type="number" maxlength="2">
+                                <input matInput formControlName="timeSec" maxlength="2" type="number">
                                 <mat-error>Must in 00 format</mat-error>
                             </mat-form-field>
                             <button type="button" mat-icon-button aria-label="Stop Timer" (click)="startTimer()">

@@ -18,8 +18,8 @@ export class AdminComponent implements OnInit {
   adminForm = this.fb.group({
     gameTitle:[''],
     period: ['1', Validators.compose([Validators.required, Validators.pattern("[0-9]{1}")])],
-    timeMin: ['00', Validators.compose([Validators.required,Validators.pattern("[0-9]{2}")])], 
-    timeSec: ['00', Validators.compose([Validators.required,Validators.pattern("[0-9]{2}")])], 
+    timeMin: ['00', Validators.compose([Validators.required,Validators.pattern("[0-9]{1,2}")])], 
+    timeSec: ['00', Validators.compose([Validators.required,Validators.pattern("[0-9]{1,2}")])], 
     homeTeam: ['HME', Validators.compose([Validators.required])], //
     homeTeamCustom:[''],
     homeScore: ['0', Validators.compose([Validators.required,Validators.pattern("[0-9]{0,3}")])], 
@@ -223,6 +223,8 @@ export class AdminComponent implements OnInit {
     let minutes = parseInt(timeMin);
     let seconds = parseInt(timeSec);
 
+    console.log(timeSec, minutes, seconds, (minutes * 60) + seconds);
+
     let totalSeconds = (minutes * 60) + seconds;
 
     return totalSeconds
@@ -230,11 +232,15 @@ export class AdminComponent implements OnInit {
 
   stopTimer(){
     const formControls = this.adminForm.controls;
-    let timeStr:string = `${formControls.timeMin.value}:${formControls.timeSec.value}` || "00:00";
-    let totalSeconds = this.parseTimeString(timeStr);
+    
+    let timeMin = formControls.timeMin.value || "00";
+    let timeSec = formControls.timeSec.value || "00";
+    let totalSeconds = this.parseTimeString(timeMin, timeSec);
     
     this.pauseTimer = true;
     this.timerSub.unsubscribe();
+
+    console.log(totalSeconds);
 
     this.socketService.sendMessage("stopTimer", totalSeconds);
     //convertToSeconds()
@@ -290,6 +296,8 @@ export class AdminComponent implements OnInit {
     const formControls = this.adminForm.controls;
 
     let msg;
+
+    console.log(type);
 
     if(type === "preset"){
       msg = formControls.presetMessage.value;

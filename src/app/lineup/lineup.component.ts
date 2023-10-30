@@ -40,7 +40,8 @@ export class LineupComponent implements OnInit {
 
   public team:Team = {
     city:'',
-    teamname:''
+    teamname:'',
+    logo:''
   };
 
   constructor(
@@ -68,7 +69,7 @@ export class LineupComponent implements OnInit {
     .pipe(
       tap(teams=>console.log(teams)),
       map((teams)=>{
-        return teams.find(team=>team.teamname==="Kinucks U13 D")
+        return teams.find(team=>team.teamname==="Kinucks U13")
       }),
       take(1)
     )
